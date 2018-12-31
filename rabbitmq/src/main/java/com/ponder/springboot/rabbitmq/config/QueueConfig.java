@@ -6,6 +6,9 @@ package com.ponder.springboot.rabbitmq.config;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 
 import org.springframework.context.annotation.Bean;
@@ -24,4 +27,17 @@ public class QueueConfig {
         args.put("x-dead-letter-routing-key", "myqueue_dlx");
         return new Queue("myqueue", true, false, false, args);
     }
+
+    @Bean
+    public Queue deadLetterQueue() {
+        return new Queue("myqueue_dlx");
+    }
+
+
+
+    // @Bean
+    // public Binding deadLetterBindding() {
+    // return BindingBuilder.bind(deadLetterQueue()).to(DirectExchange.DEFAULT).with("myqueue_dlx");
+    // }
+
 }

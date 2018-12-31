@@ -6,6 +6,7 @@ package com.ponder.springboot.rabbitmq.handler;
 
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -14,14 +15,15 @@ import org.springframework.stereotype.Component;
  * @author root
  */
 @Component
+@RabbitListener(queues = "myqueue")
 public class Handler {
-    @RabbitListener(queues = "myqueue")
-    public void processC(Message msg, Channel channel) throws Exception {
-        String str = new String(msg.getBody(), "UTF-8");
+    @RabbitHandler
+    public void processC(String str) throws Exception {
+
 
         if (str.startsWith("N")) {
             System.out.println("Reject:" + str);
-            channel.basicAck(msg.getMessageProperties().getDeliveryTag(), false);
+            throw new Exception("Rejected");
         } else {
             System.out.println("Receive:" + str);
         }
