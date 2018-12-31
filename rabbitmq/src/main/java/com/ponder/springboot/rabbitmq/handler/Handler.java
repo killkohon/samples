@@ -18,12 +18,12 @@ import org.springframework.stereotype.Component;
 @RabbitListener(queues = "myqueue")
 public class Handler {
     @RabbitHandler
-    public void processC(String str) throws Exception {
+    public void processC(String str, Message message, Channel channel) throws Exception {
 
-
+        
         if (str.startsWith("N")) {
             System.out.println("Reject:" + str);
-            throw new Exception("Rejected");
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
         } else {
             System.out.println("Receive:" + str);
         }

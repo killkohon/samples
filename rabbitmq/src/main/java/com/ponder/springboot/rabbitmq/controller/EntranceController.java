@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/mq")
 public class EntranceController {
 
+    private static long series = 0L;
+
     @Autowired
     private RabbitTemplate template;
 
     @RequestMapping("/send/{times}/{message}")
     public String send(@PathVariable("times") int times, @PathVariable("message") String msg) {
         for (int i = 0; i < times; i++) {
-            template.convertAndSend("myqueue", msg + "_" + System.currentTimeMillis());
+            template.convertAndSend("myqueue", msg + "_" + (++series));
         }
         return "finished";
     }
