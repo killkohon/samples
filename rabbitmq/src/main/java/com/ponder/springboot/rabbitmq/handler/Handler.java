@@ -20,12 +20,13 @@ public class Handler {
     @RabbitHandler
     public void processC(String str, Message message, Channel channel) throws Exception {
 
-        
+
         if (str.startsWith("N")) {
             System.out.println("Reject:" + str);
-            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
+            channel.basicReject(message.getMessageProperties().getDeliveryTag(), false);
         } else {
             System.out.println("Receive:" + str);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         }
     }
 }
